@@ -1,20 +1,49 @@
 <template>
   <div class="detail">
     <div class="detail-view card">
-      <div class="data card-body"></div>
-      <button class="close">Fermer</button>
+      <div class="data card-body">
+        <img class="image" :src="url + poke.name + '.png'"/>
+        <h2 class="card-title">{{poke.name}}</h2>
+        <ul>
+          <li class="type" v-for="typ in poke.types" :key="typ.slot">
+            <p :class="typ.type.name">{{typ.type.name}}</p>
+          </li>
+        </ul>
+      </div>
+      <button class="close" v-on:click="closedetail()">Fermer</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import axios from 'axios'
+export default {
+  name: "PokemonDetail",
+  props: ["urlpokemon"],
+  data() {
+    return {
+      poke: null,
+      url: "https://img.pokemondb.net/sprites/bank/normal/"
+    }
+  },
+  created() {
+    console.log(this.urlpokemon)
+    axios
+      .get(this.urlpokemon)
+      .then(response => (this.poke = response.data));
+  },
+  methods: {
+    closedetail: function(){
+      this.$emit("closed");
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 .type {
   .grass {
-    background: rgb(3, 139, 44) !important;
+    background: rgb(4, 139, 44) !important;
   }
   .poison {
     background: rgb(74, 7, 105) !important;

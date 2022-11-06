@@ -1,5 +1,14 @@
 <template>
-  <div class="list"></div>
+  <div class="list">
+    <ul>
+      <li v-for="poke in pokemon" :key="poke.name">
+        <article v-on:click="showPokemonDetail(poke.url)">
+          <h3> {{poke.name}}</h3>
+          <img :src="img_pokemon + poke.name +'.png'">
+        </article>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -11,16 +20,18 @@ export default {
     return{
       name: "Paul",
       pokemon: null,
-      img_pokemon: null
+      img_pokemon: "https://img.pokemondb.net/sprites/bank/normal/"
     };
   },
   mounted () {
     axios
       .get("https://pokeapi.co/api/v2/pokemon")
-      .then(response => (this.pokemon = response.results));
-    axios
-      .get("https://img.pokemondb.net/sprites/bank/normal/")
-      .then(response =>(this.img_pokemon = response))
+      .then(response => (this.pokemon = response.data.results));
+  },
+  methods:{
+    showPokemonDetail: function(pokei){
+      this.$emit('showPokemonDetailEmit', pokei)
+    }
   }
 };
 </script>

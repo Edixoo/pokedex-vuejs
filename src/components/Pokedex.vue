@@ -1,22 +1,34 @@
 <template>
   <div class="container">
-    <PokemonSearch />
-    <PokemonDetail />
-    <PokemonList />
+    <PokemonList v-on:showPokemonDetailEmit="update"/>
+    <PokemonDetail :urlpokemon="envoi" v-if="verif"  v-on:closed="verif=false"/>
   </div>
 </template>
 
 <script>
 import PokemonDetail from "../components/PokemonDetail.vue";
 import PokemonList from "../components/PokemonList.vue";
-import PokemonSearch from "../components/PokemonSearch.vue";
+//import PokemonSearch from "../components/PokemonSearch.vue";
 
 export default {
+  name: "Pokedex",
+  data(){
+    return{
+      verif:false,
+      envoi: "JeanMich",
+    }  
+  },
   components: {
     PokemonDetail,
     PokemonList,
-    PokemonSearch,
+    //PokemonSearch,
   },
+  methods: {
+    update: function(pok){
+      this.verif=true;
+      this.envoi=pok;
+    }
+  }
 };
 </script>
 
