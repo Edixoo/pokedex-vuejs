@@ -1,9 +1,23 @@
 <template>
-  <div class="searchbar"></div>
+  <div class="searchbar">
+    <input type="text" placeholder="ivysaur, charmander, blastoise...." v-model=name />
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  name:"PokemonSearch",
+  data(){
+    return{
+      name: null
+    }
+  },
+  watch:{
+    name: function(newname){
+      this.$emit("searchPokemonEmit", newname)
+    }
+  }
+};
 </script>
 
 <style scoped>

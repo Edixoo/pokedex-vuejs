@@ -1,27 +1,26 @@
 <template>
   <div class="list">
-    <ul>
-      <li v-for="poke in pokemon" :key="poke.name">
-        <article v-on:click="showPokemonDetail(poke.url)">
+
+        <article v-for="poke in pokemonsFiltered" :key="poke.name" v-on:click="showPokemonDetail(poke.url)">
           <h3> {{poke.name}}</h3>
           <img :src="img_pokemon + poke.name +'.png'">
         </article>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import lodash from 'lodash';
 
 export default {
   name: "app",
+  props: ["search"],
   data() {
     return{
-      name: "Paul",
       pokemon: null,
       img_pokemon: "https://img.pokemondb.net/sprites/bank/normal/"
     };
+    
   },
   mounted () {
     axios
@@ -30,7 +29,17 @@ export default {
   },
   methods:{
     showPokemonDetail: function(pokei){
+
       this.$emit('showPokemonDetailEmit', pokei)
+    }
+  },
+  computed: {
+    pokemonsFiltered(){
+      if(this.search==null || this.search==""){
+        return this.pokemon
+      } else {
+        return lodash.filter(this.pokemon, ['name', this.search])
+      }
     }
   }
 };

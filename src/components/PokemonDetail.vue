@@ -2,13 +2,37 @@
   <div class="detail">
     <div class="detail-view card">
       <div class="data card-body">
+
         <img class="image" :src="url + poke.name + '.png'"/>
         <h2 class="card-title">{{poke.name}}</h2>
-        <ul>
-          <li class="type" v-for="typ in poke.types" :key="typ.slot">
-            <p :class="typ.type.name">{{typ.type.name}}</p>
-          </li>
-        </ul>
+        <div class="types">
+          <div class="type left" v-for="typ in poke.types" :key="typ.slot">
+            <span :class="typ.type.name">{{typ.type.name}}</span>
+          </div>
+        </div>
+        <div class="types">
+            <div class="ability left" v-for="abi in poke.abilities" :key="abi.ability.name">
+              <span>{{abi.ability.name}}</span>
+            </div>
+        </div>
+        <div class="property">
+          <div class="left bold"> Taille</div>
+          <div class="right"> {{poke.height/10}} m</div>
+        </div>
+        <div class="property">
+          <div class="left bold"> Poids</div>
+          <div class="right"> {{poke.weight/10}} kg</div>
+        </div>
+        <div class="data">
+          <div class="left bold">Statistiques de base</div>
+          <div class="property" v-for="stat in poke.stats" :key="stat.stat.name">
+            <div class="left bold"> {{stat.stat.name}}</div>
+            <div class="right">{{stat.base_stat}}</div>
+          </div>
+        </div>
+        <div>
+          
+        </div>
       </div>
       <button class="close" v-on:click="closedetail()">Fermer</button>
     </div>
@@ -23,14 +47,23 @@ export default {
   data() {
     return {
       poke: null,
-      url: "https://img.pokemondb.net/sprites/bank/normal/"
+      url: "https://img.pokemondb.net/sprites/bank/normal/",
+      espece: null,
+      evolutionChain: null
     }
   },
   created() {
-    console.log(this.urlpokemon)
     axios
       .get(this.urlpokemon)
       .then(response => (this.poke = response.data));
+  },
+  mounted(){
+    axios
+      .get(this.poke.species.url)
+      .then(response => (this.espece = response.data));
+    axios
+      .get(this.espece.evolution_chain)
+      .then(response =>(this.evolutionChain = response.data))
   },
   methods: {
     closedetail: function(){
@@ -171,7 +204,7 @@ h3 {
   border-bottom: 1px solid #ccc;
 }
 
-.types,
+.types
 .abilities {
   display: flex;
   justify-content: flex-start;
